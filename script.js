@@ -1,9 +1,20 @@
 // Globale Variablen
 let selectedProfile = null;
+let selectedYear = new Date().getFullYear();
+
+const currentYear = new Date().getFullYear();
 const profiles = {
-    dom: { counter: 0, history: [] },
-    lex: { counter: 0, history: [] }
+    dom: { counter: 6, history: [] },
+    lex: { counter: 6, history: [] }
 };
+
+// Initialisiere die Standarddaten
+for (let i = 0; i < 6; i++) {
+    const date = new Date(currentYear, i, 1);
+    const entry = `${date.toLocaleDateString('de-DE')} am 12:00:00 - Do gehts oan glei besser!`;
+    profiles.dom.history.push(entry);
+    profiles.lex.history.push(entry);
+}
 
 // DOM-Elemente
 const domProfile = document.getElementById('dom-profile');
@@ -13,12 +24,32 @@ const splashContainer = document.getElementById('splash-container');
 const historyTabs = document.querySelectorAll('.history-tab');
 const historyLists = document.querySelectorAll('.history-list');
 const lakeContainer = document.querySelector('.lake-container');
+const yearSelect = document.getElementById('year-select');
 
 // Event Listeners
 domProfile.addEventListener('click', () => selectProfile('dom'));
 lexProfile.addEventListener('click', () => selectProfile('lex'));
 jumpButton.addEventListener('click', takeABath);
 historyTabs.forEach(tab => tab.addEventListener('click', switchHistoryTab));
+yearSelect.addEventListener('change', handleYearChange);
+
+// Initialisiere die Jahresauswahl
+function initYearSelect() {
+    const startYear = currentYear - 0;
+    const endYear = currentYear + 1;
+    for (let year = startYear; year <= endYear; year++) {
+        const option = document.createElement('option');
+        option.value = year;
+        option.textContent = year;
+        yearSelect.appendChild(option);
+    }
+    yearSelect.value = currentYear;
+}
+
+function handleYearChange() {
+    selectedYear = parseInt(yearSelect.value);
+    updateCalendarView(selectedProfile || 'dom');
+}
 
 function selectProfile(profile) {
     if (selectedProfile) {
@@ -28,19 +59,19 @@ function selectProfile(profile) {
     document.getElementById(`${profile}-profile`).classList.add('selected');
     jumpButton.disabled = false;
     jumpButton.querySelector('.button-text').textContent = `${profile.toUpperCase()} hupf in See!`;
+    updateCalendarView(profile);
 }
 
 function updateCalendarView(profile) {
     const historyList = document.getElementById(`${profile}-history`);
     historyList.innerHTML = '';
 
-    const currentYear = new Date().getFullYear();
     const months = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
 
     months.forEach((month, index) => {
         const monthEntry = profiles[profile].history.find(entry => {
             const entryDate = new Date(entry.split(' ')[0].split('.').reverse().join('-'));
-            return entryDate.getMonth() === index && entryDate.getFullYear() === currentYear;
+            return entryDate.getMonth() === index && entryDate.getFullYear() === selectedYear;
         });
 
         const monthElement = document.createElement('div');
@@ -256,3 +287,62 @@ document.addEventListener('keydown', (e) => {
         secretCode = '';
     }
 });
+
+function resetData() {
+    const currentYear = new Date().getFullYear();
+    profiles.dom = { counter: 6, history: [] };
+    profiles.lex = { counter: 6, history: [] };
+
+    // Setze die Standarddaten für die ersten 6 Monate
+    for (let i = 0; i < 6; i++) {
+        const date = new Date(currentYear, i, 1);
+        const entry = `${date.toLocaleDateString('de-DE')} am 12:00:00 - Do gehts oan glei besser!`;
+        profiles.dom.history.push(entry);
+        profiles.lex.history.push(entry);
+    }
+
+    saveData();
+    updateUI();
+    updateCalendarView('dom');
+    updateCalendarView('lex');
+    selectedProfile = null;
+    document.querySelectorAll('.profile').forEach(profile => profile.classList.remove('selected'));
+    jumpButton.disabled = true;
+    jumpButton.querySelector('.button-text').textContent = 'Geht scho!';
+    
+    // Setze die Jahresauswahl zurück
+    yearSelect.value = currentYear;
+    selectedYear = currentYear;
+    
+    showMessage('Alle Daten wurden zurückgesetzt!');
+}
+
+// Event Listener für den Reset-Button
+document.getElementById('reset-button').addEventListener('click', resetData);
+
+
+function populateYearSelector() {
+    const yearSelect = document.getElementById('year-select');
+    const startYear = currentYear  - 1;  // 5 Jahre zurück
+    const endYear = currentYear + 3;    // 5 Jahre in die Zukunft
+
+    for (let year = startYear; year <= endYear; year++) {
+        const option = document.createElement('option');
+        option.value = year;
+        option.textContent = year;
+        if (year === currentYear) {
+            option.selected = true;
+        }
+        yearSelect.appendChild(option);
+    }
+
+    yearSelect.addEventListener('change', function() {
+        selectedYear = parseInt(this.value);
+        updateCalendarView(selectedProfile || 'dom');
+    });
+}
+
+// Rufen Sie diese Funktion beim Laden der Seite auf
+populateYearSelector();
+initYearSelect();
+loadData();

@@ -40,10 +40,16 @@
                 <span class="button-text">Geht scho!</span>
                 <span class="splash-icon">💦</span>
             </button>
+
+            <button id="reset-button">Daten zurücksetzen</button>
+
         </main>
         
         <aside class="history-container">
-            <h2 class="history-title">Platsch-Historie</h2>
+            <div class="history-header">
+                <h2 class="history-title">Platsch-Historie</h2>
+                <select id="year-select"></select>
+            </div>
             <div class="history-tabs">
                 <button class="history-tab active" data-profile="dom">Dom's Tauchgänge</button>
                 <button class="history-tab" data-profile="lex">Lex' Wasserspiele</button>
@@ -53,7 +59,6 @@
                 <ul id="lex-history" class="history-list"></ul>
             </div>
         </aside>
-    </div>
     
     <script src="script.js"></script>
 </body>
