@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strondbodbuam</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <h1 class="bouncy-text">Strondbodbuam Hallstättersee</h1>
+        </header>
+        
+        <main>
+            <div class="lake-container">
+                <img src="see.webp" alt="See" class="lake-image">
+                <div id="splash-container"></div>
+            </div>
+            
+            <div class="profiles-container">
+                <div class="profile" id="dom-profile">
+                    <div class="profile-image-container">
+                        <img src="dom.jpg" alt="Dom" class="profile-image">
+                    </div>
+                    <h2 class="profile-name">Dom</h2>
+                    <div class="counter">0 Platscher</div>
+                </div>
+                <div class="profile" id="lex-profile">
+                    <div class="profile-image-container">
+                        <img src="lex.jpg" alt="Lex" class="profile-image">
+                    </div>
+                    <h2 class="profile-name">Lex</h2>
+                    <div class="counter">0 Platscher</div>
+                </div>
+            </div>
+            
+            <button id="jump-button" disabled>
+                <span class="button-text">Geht scho!</span>
+                <span class="splash-icon">💦</span>
+            </button>
+        </main>
+        
+        <aside class="history-container">
+            <h2 class="history-title">Platsch-Historie</h2>
+            <div class="history-tabs">
+                <button class="history-tab active" data-profile="dom">Dom's Tauchgänge</button>
+                <button class="history-tab" data-profile="lex">Lex' Wasserspiele</button>
+            </div>
+            <div class="history-content">
+                <ul id="dom-history" class="history-list active"></ul>
+                <ul id="lex-history" class="history-list"></ul>
+            </div>
+        </aside>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
